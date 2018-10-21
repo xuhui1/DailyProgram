@@ -1,0 +1,15 @@
+Abstract
+Each word or token is treated as one data, classifying each word, and representing the dense vector as a sparse vector (the dimensional 2,035,523).
+Introduction
+
+Model
+
+Inference
+
+Parameter Estimation
+
+Results
+
+References
+
+Appendix
