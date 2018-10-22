@@ -5,8 +5,8 @@ import zipfile
 import random
 import scipy.sparse as sp
 from sklearn.gaussian_process import GaussianProcessClassifier
-from sklearn.gaussian_process.kernels import ConstantKernel, RBF
-from sklearn.decomposition import SparsePCA,PCA
+from sklearn.gaussian_process.kernels import RBF
+from sklearn.decomposition import PCA
 from sklearn.externals import joblib
 from collections import OrderedDict
 
@@ -97,9 +97,11 @@ def train(x_train, y_train):
 
     m = gpc.fit(x_train,y_train)
     joblib.dump(m,"./model.pkl")
+    return m
 
-def test(x_test):
-    m = joblib.load("./model.pkl")
+def test(x_test,m=None):
+    if m==None:
+        m = joblib.load("./model.pkl")
     y_predict = m.predict(x_test)
     y_predict_log = m.predict_proba(x_test)
     return y_predict,y_predict_log
@@ -119,19 +121,33 @@ def predict_performance(y_test, y_pred, y_logprob):
 def predict(inzip):
     zips = zipfile.ZipFile(inzip)  # read zip file
     namelist = zips.namelist()  # get name list of zip
-
+    x_test = []
     m = joblib.load("./model.pkl")
     f = open("./predictions.txt",'w',encoding='utf-8')
+    sentence_len = []
+    sentence_len.append(0)
+    pca = PCA(n_components=3000)
     for filename in namelist:
         if filename.endswith("/"):
             continue
         x = zips.read(filename).decode("utf-8")
         sentence_vect = read_x_vect(x)  # get every word or token vector
-        x_test = []
+        sentence_len.append(len(sentence_vect))
         for key in sentence_vect.keys():
             x_test.append(sentence_vect[key])
-        y_predict = m.predict(x_test)
-        for y in y_predict:
+    x_test = np.asarray(x_test)
+    x_test = pca.fit_transform(x_test)
+    y_predict = m.predict_proba(x_test)
+    for i in range(1,len(sentence_len)):
+        sentence_len[i] = sentence_len[i-1]+sentence_len[i]
+        for y in y_predict[sentence_len[i-1]:sentence_len[i]]:
             y = ','.join(y)
             f.write(y+"\n")
         f.write("\n")
+
+if __name__ == '__main__':
+    x_train, y_train, x_test, y_test = load_train_data('conll_train.zip')
+    m = train(x_train, y_train)
+    y_predict, y_predict_log = test(x_test,m)
+    predict_performance(y_test,y_predict,y_predict_log)
+    predict('conll_test_features.zip')
