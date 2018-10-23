@@ -29,7 +29,7 @@ def load_test_data(inzip):
 	row_test = [];col_test = [];data_test = []
 	x_test = []
 	row_num_train = 0
-	pca = PCA(n_components=3000, iterated_power=1)
+	pca = PCA(n_components=300, iterated_power=1)
 	i = 8937;y_lens = 0  # start 8937 end 10948
 	# split_iters = [9236,9636,9900,10200,10400,10600,10948]
 	split_iters = [9236,9636,9900,10200,10400,10600,10948]
