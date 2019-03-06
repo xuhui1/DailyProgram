@@ -48,6 +48,8 @@ def start_encoding(txt_name):
 	mtf_file = open(mtf_name, "wb")
 	_magic_numbers(mtf_file)
 	all_words = []
+	_index = []
+	index = 1
 	total_number_of_words = 0
 	for input_line in txt_file:
 		words_in_line = input_line.split(" ")
@@ -60,21 +62,31 @@ def start_encoding(txt_name):
 				current_word = current_word.replace("\n", "")
 			try:
 				word_index, all_words = _move_word(current_word,all_words)
+				# print(all_words)
+				# print(word_index)
+				_index.append(word_index+1)
 				code = word_index + 1
 				words_are_the_same = True
 			except ValueError:
 				words_are_the_same = False
+
 			len_of_current_word = len(current_word)
 			if words_are_the_same == False and len_of_current_word > 0:
 				all_words.insert(0, current_word)
+				_index.append(str(index)+current_word)
+				index += 1
 				total_number_of_words += 1
 				code = total_number_of_words
 			if (has_new_line == True and len_of_current_word > 0) or (has_new_line == False):
 				_mtf_write(mtf_file, code)
 			if words_are_the_same == False:
 				_mtf_write(mtf_file, current_word)
+				# _index.append(index)
 			if has_new_line == True:
 				_mtf_write(mtf_file, "\n")
+
+	# print(all_words)
+	print(_index)
 	mtf_file.close()
 	txt_file.close()
 # -------------- mtf2text ----------------
