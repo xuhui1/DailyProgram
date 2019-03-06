@@ -88,6 +88,7 @@ def start_encoding(txt_name):
 	# print(all_words)
 	for d in _index:
 		print(d,end=" ")
+	# print(_index)
 	mtf_file.close()
 	txt_file.close()
 # -------------- mtf2text ----------------
