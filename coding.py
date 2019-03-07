@@ -149,6 +149,7 @@ def start_decoding(mtf_name):
 	txt_file = open(txt_name, "w")
 	mtf_file = open(mtf_name, "rb")
 	# _mtf_file_start_magic(mtf_file)
+	mtf_file.read(4)
 	current_byte = mtf_file.read(1)
 	# current_byte = mtf_file.read(1)
 	all_words = []
