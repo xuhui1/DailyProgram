@@ -15,10 +15,10 @@ def is_text_file(file_name):
 # Function used to write the magic numbers to the mtf file.
 def _magic_numbers(mtf):
 	xx = bytearray()
+	xx.append(0xba)
+	xx.append(0x5e)
 	xx.append(0xfa)
-	xx.append(0xce)
-	xx.append(0xfa)
-	xx.append(0xdf)
+	xx.append(0x11)
 	mtf.write(xx)
 # write strs to mtf file
 def _mtf_write(mtf, strs):
