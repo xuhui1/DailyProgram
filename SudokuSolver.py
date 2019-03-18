@@ -166,7 +166,7 @@ if __name__ == '__main__':
 		sys.exit(1)
 	time1 = time.time()
 	in_file = sys.argv[1]
-	candidata_set_sorted = ViolentSorted()
+	candidata_set_sorted = CandidateSetSorted()
 	original_sudo = read_sudo_file(in_file)
 	out_file = ''
 	if in_file.startswith('euler'):
